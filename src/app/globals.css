@@ -4,9 +4,18 @@
 
 :root {
   color: white;
-  --foreground-rgb: 0, 0, 0;
-  --background-start-rgb: 214, 219, 220;
-  --background-end-rgb: 255, 255, 255;
+  --foreground-rgb: 255, 255, 255;
+  --background-start-rgb: 17, 7, 31;
+  --background-end-rgb: 17, 7, 31;
+  --color-bg: #11071F;
+  --color-surface: #1A0B2E;
+  --color-border: rgba(124, 58, 237, 0.2);
+  --color-accent: #9857d3;
+  --color-accent-blue: #6EBFF4;
+}
+
+html {
+  scroll-behavior: smooth;
 }
 
 /* Enhanced animations */
@@ -252,27 +261,146 @@
   }
 }
 
-/*
-@media (prefers-color-scheme: dark) {
-  :root {
-    --foreground-rgb: 255, 255, 255;
-    --background-start-rgb: 0, 0, 0;
-    --background-end-rgb: 0, 0, 0;
+/* ===== PAGE SPECIFIC ===== */
+
+/* Hero grid background pattern */
+.hero-grid {
+  background-image: linear-gradient(rgba(152, 87, 211, 0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(152, 87, 211, 0.04) 1px, transparent 1px);
+  background-size: 60px 60px;
+}
+
+/* Gradient border card */
+.gradient-border {
+  position: relative;
+  border-radius: 12px;
+  background: linear-gradient(#1A0B2E, #1A0B2E) padding-box,
+    linear-gradient(135deg, rgba(152, 87, 211, 0.5), rgba(110, 191, 244, 0.5)) border-box;
+  border: 1px solid transparent;
+}
+
+/* Section divider */
+.section-divider {
+  height: 1px;
+  background: linear-gradient(to right, transparent, rgba(152, 87, 211, 0.4), transparent);
+  margin: 2rem 0;
+}
+
+/* Pill tag */
+.tag-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 12px;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: 500;
+  background: rgba(152, 87, 211, 0.15);
+  color: #c084fc;
+  border: 1px solid rgba(152, 87, 211, 0.3);
+  transition: all 0.2s ease;
+}
+
+/* Page background */
+.page-bg {
+  background-color: #11071F;
+  min-height: 100vh;
+}
+
+/* Noise overlay for depth */
+.noise-overlay::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.03;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+}
+
+/* Stat card */
+.stat-card {
+  background: linear-gradient(135deg, rgba(26, 11, 46, 0.8), rgba(30, 14, 55, 0.6));
+  border: 1px solid rgba(152, 87, 211, 0.2);
+  border-radius: 16px;
+  padding: 1.5rem;
+  text-align: center;
+  transition: all 0.3s ease;
+}
+
+.stat-card:hover {
+  border-color: rgba(152, 87, 211, 0.5);
+  transform: translateY(-4px);
+  box-shadow: 0 20px 40px rgba(152, 87, 211, 0.15);
+}
+
+/* Nav link active style */
+.nav-link-active {
+  color: #c084fc !important;
+}
+
+.nav-link-active::after {
+  width: 100% !important;
+}
+
+/* Pipeline step */
+.pipeline-step {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.pipeline-step:not(:last-child)::after {
+  content: '';
+  position: absolute;
+  bottom: -24px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 2px;
+  height: 24px;
+  background: linear-gradient(to bottom, rgba(152, 87, 211, 0.6), transparent);
+}
+
+/* Glowing dot */
+@keyframes ping-slow {
+
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 0.8;
+  }
+
+  50% {
+    transform: scale(1.3);
+    opacity: 0.3;
   }
 }
 
-body {
-  color: rgb(var(--foreground-rgb));
-  background: linear-gradient(
-      to bottom,
-      transparent,
-      rgb(var(--background-end-rgb))
-    )
-    rgb(var(--background-start-rgb));
+.ping-slow {
+  animation: ping-slow 2s ease-in-out infinite;
 }
 
-@layer utilities {
-  .text-balance {
-    text-wrap: balance;
+/* Smooth * transition override — exclude transform for performance */
+* {
+  transition-property: color, background-color, border-color, opacity, box-shadow;
+  transition-duration: 0.2s;
+  transition-timing-function: ease;
+}
+
+/* Mobile menu slide */
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
   }
-} */
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.mobile-menu-open {
+  animation: slideDown 0.25s ease forwards;
+}

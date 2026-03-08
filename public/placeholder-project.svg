@@ -1,0 +1,64 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="450" viewBox="0 0 800 450">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#1A0B2E"/>
+      <stop offset="100%" style="stop-color:#13082A"/>
+    </linearGradient>
+    <linearGradient id="accent" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#7127BA"/>
+      <stop offset="100%" style="stop-color:#6EBFF4"/>
+    </linearGradient>
+    <linearGradient id="ring" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#9857d3;stop-opacity:0.6"/>
+      <stop offset="100%" style="stop-color:#6EBFF4;stop-opacity:0.2"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Background -->
+  <rect width="800" height="450" fill="url(#bg)"/>
+
+  <!-- Subtle grid lines -->
+  <g stroke="#ffffff" stroke-opacity="0.03" stroke-width="1">
+    <line x1="0" y1="75" x2="800" y2="75"/>
+    <line x1="0" y1="150" x2="800" y2="150"/>
+    <line x1="0" y1="225" x2="800" y2="225"/>
+    <line x1="0" y1="300" x2="800" y2="300"/>
+    <line x1="0" y1="375" x2="800" y2="375"/>
+    <line x1="100" y1="0" x2="100" y2="450"/>
+    <line x1="200" y1="0" x2="200" y2="450"/>
+    <line x1="300" y1="0" x2="300" y2="450"/>
+    <line x1="400" y1="0" x2="400" y2="450"/>
+    <line x1="500" y1="0" x2="500" y2="450"/>
+    <line x1="600" y1="0" x2="600" y2="450"/>
+    <line x1="700" y1="0" x2="700" y2="450"/>
+  </g>
+
+  <!-- Glow blob -->
+  <ellipse cx="400" cy="225" rx="200" ry="120" fill="#7127BA" fill-opacity="0.06"/>
+
+  <!-- Outer ring -->
+  <circle cx="400" cy="200" r="80" fill="none" stroke="url(#ring)" stroke-width="1.5" stroke-dasharray="8 4"/>
+
+  <!-- Inner circle -->
+  <circle cx="400" cy="200" r="58" fill="#1A0B2E" stroke="#7127BA" stroke-opacity="0.3" stroke-width="1"/>
+
+  <!-- Gear / build icon -->
+  <g transform="translate(400,200)" fill="none" stroke="url(#accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <!-- wrench-like tools icon -->
+    <circle cx="0" cy="0" r="16" stroke="url(#accent)" stroke-width="2" fill="none"/>
+    <path d="M-8,-8 L8,8 M-8,8 L8,-8" stroke-opacity="0.4"/>
+    <path d="M0,-22 L0,-16 M0,16 L0,22 M-22,0 L-16,0 M16,0 L22,0"/>
+    <path d="M-15,-15 L-11,-11 M11,11 L15,15 M-15,15 L-11,11 M11,-11 L15,-15"/>
+  </g>
+
+  <!-- "In Progress" badge -->
+  <rect x="332" y="282" width="136" height="28" rx="14" fill="#EAB308" fill-opacity="0.12" stroke="#EAB308" stroke-opacity="0.35" stroke-width="1"/>
+  <circle cx="356" cy="296" r="4" fill="#EAB308" fill-opacity="0.9"/>
+  <text x="370" y="300" font-family="system-ui, sans-serif" font-size="12" font-weight="600" fill="#EAB308" fill-opacity="0.9">In Progress</text>
+
+  <!-- Bottom label -->
+  <text x="400" y="370" text-anchor="middle" font-family="system-ui, sans-serif" font-size="13" fill="#CCD6F6" fill-opacity="0.35" letter-spacing="2">PROJECT PREVIEW COMING SOON</text>
+
+  <!-- Gradient top bar -->
+  <rect x="0" y="0" width="800" height="3" fill="url(#accent)" opacity="0.7"/>
+</svg>
