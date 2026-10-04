@@ -59,7 +59,7 @@ export const projects: Project[] = [
     },
     image: '/visualmind.png',
     category: 'AI / ML',
-    links: { link: null, github: null },
+    links: { link: null, github: 'https://github.com/sahki-abderrahemane/visualmind' },
     status: 'Completed',
     highlights: [
       'Multimodal CLIP embeddings (image + text in shared 512D space)',
@@ -109,7 +109,7 @@ export const projects: Project[] = [
     },
     image: '/mentor-ai.png',
     category: 'AI / ML',
-    links: { link: null, github: null },
+    links: { link: null, github: 'https://github.com/sahki-abderrahemane/Mentor-AI_Assistant' },
     status: 'Completed',
     highlights: [
       'Custom document processing pipeline (PDF extraction, section detection, chunking, knowledge-unit creation)',
@@ -157,7 +157,7 @@ export const projects: Project[] = [
     },
     image: '/mentorai-finetuning.png',
     category: 'AI / ML',
-    links: { link: null, github: null },
+    links: { link: null, github: 'https://github.com/sahki-abderrahemane/llm-finetuning-platform' },
     status: 'Completed',
     highlights: [
       'Standalone Python package (mentorai-finetuning) with unified CLI',
@@ -293,7 +293,7 @@ export const projects: Project[] = [
     },
     image: '/email-assistant.png',
     category: 'AI / ML',
-    links: { link: null, github: null },
+    links: { link: null, github: 'https://github.com/sahki-abderrahemane/Email-assistant' },
     status: 'Completed',
     highlights: [
       '6-category email classification with fine-tuned DistilBERT',
@@ -342,7 +342,7 @@ export const projects: Project[] = [
     },
     image: '/sentinel-ai.png',
     category: 'AI / ML',
-    links: { link: null, github: null },
+    links: { link: null, github: 'https://github.com/sahki-abderrahemane/Finance-risk-monitoring-platform' },
     status: 'In Progress',
     highlights: [
       '5-phase architecture: Core Engine → Multimodal → RAG+LLM → RL → Trust',
