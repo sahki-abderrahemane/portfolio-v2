@@ -4,156 +4,197 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { motion } from 'framer-motion';
 import { getFeaturedProjects } from '@/data/projects';
-import { skills } from '@/data/skills';
+import { certifications } from '@/data/certifications';
+import CVDropdown from '@/components/ui/CVDropdown';
 
 const fadeUp = {
   hidden: { opacity: 0, y: 30 },
   show: (i = 0) => ({
     opacity: 1,
     y: 0,
-    transition: { duration: 0.6, delay: i * 0.1, ease: 'easeOut' as const },
+    transition: { duration: 0.55, delay: i * 0.1, ease: [0.25, 0.46, 0.45, 0.94] as const },
   }),
 };
 
 const stats = [
-  {
-    value: '4+', label: 'Web Projects',
-    icon: <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" d="M12 21a9.004 9.004 0 008.716-6.747M12 21a9.004 9.004 0 01-8.716-6.747M12 21c2.485 0 4.5-4.03 4.5-9S14.485 3 12 3m0 18c-2.485 0-4.5-4.03-4.5-9S9.515 3 12 3m0 0a8.997 8.997 0 017.843 4.582M12 3a8.997 8.997 0 00-7.843 4.582m15.686 0A11.953 11.953 0 0112 10.5c-2.998 0-5.74-1.1-7.843-2.918m15.686 0A8.959 8.959 0 0121 12c0 .778-.099 1.533-.284 2.253m0 0A17.919 17.919 0 0112 16.5a17.92 17.92 0 01-8.716-2.247m0 0A9.015 9.015 0 013 12c0-1.605.42-3.113 1.157-4.418" /></svg>,
-  },
-  {
-    value: '6+', label: 'ML Certifications',
-    icon: <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" d="M4.26 10.147a60.436 60.436 0 00-.491 6.347A48.627 48.627 0 0112 20.904a48.627 48.627 0 018.232-4.41 60.46 60.46 0 00-.491-6.347m-15.482 0a50.57 50.57 0 00-2.658-.813A59.905 59.905 0 0112 3.493a59.902 59.902 0 0110.399 5.84c-.896.248-1.783.52-2.658.814m-15.482 0A50.697 50.697 0 0112 13.489a50.702 50.702 0 017.74-3.342M6.75 15a.75.75 0 100-1.5.75.75 0 000 1.5zm0 0v-3.675A55.378 55.378 0 0112 8.443m-7.007 11.55A5.981 5.981 0 006.75 15.75v-1.5" /></svg>,
-  },
-  {
-    value: '10+', label: 'Technologies',
-    icon: <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" d="M8.25 3v1.5M4.5 8.25H3m18 0h-1.5M4.5 12H3m18 0h-1.5m-15 3.75H3m18 0h-1.5M8.25 19.5V21M12 3v1.5m0 15V21m3.75-18v1.5m0 15V21m-9-1.5h10.5a2.25 2.25 0 002.25-2.25V6.75a2.25 2.25 0 00-2.25-2.25H6.75A2.25 2.25 0 004.5 6.75v10.5a2.25 2.25 0 002.25 2.25zm.75-12h9v9h-9v-9z" /></svg>,
-  },
-  {
-    value: '3+', label: 'Years Experience',
-    icon: <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" d="M2.25 18L9 11.25l4.306 4.307a11.95 11.95 0 015.814-5.519l2.74-1.22m0 0l-5.94-2.28m5.94 2.28l-2.28 5.941" /></svg>,
-  },
+  { value: '03+', label: 'Years Building', suffix: 'Since 2022' },
+  { value: '10+', label: 'Projects', suffix: 'Shipped & deployed' },
+  { value: '06', label: 'ML Certifications', suffix: 'Stanford · DataCamp' },
+  { value: '15+', label: 'Technologies', suffix: 'Across full stack + AI' },
 ];
 
-const featuredSkills = skills.filter((s) =>
-  ['React', 'Next.js', 'Node.js', 'Python', 'TensorFlow', 'MongoDB', 'TypeScript', 'NestJS'].includes(s.name)
+const aiStrip = ['LLMs', 'RAG', 'Fine-Tuning', 'Multimodal', 'Vector Search', 'ML'];
+const engStrip = ['Next.js', 'NestJS', 'FastAPI', 'PostgreSQL', 'Docker', 'TypeScript'];
+
+const trajectory = [
+  { year: '2022', label: 'Software Engineering', color: 'from-gray-500 to-gray-400' },
+  { year: '2023', label: 'Full Stack', color: 'from-blue-600 to-blue-400' },
+  { year: '2024', label: 'ML + AI', color: 'from-purple-600 to-purple-400' },
+  { year: '2024', label: 'LLM Systems', color: 'from-violet-600 to-cyan-400' },
+  { year: 'Now', label: 'RAG · Fine-Tuning · Multimodal', color: 'from-cyan-500 to-blue-400' },
+];
+
+const statusColor: Record<string, string> = {
+  Live: 'bg-green-500/15 text-green-400 border-green-500/30',
+  Completed: 'bg-blue-500/15 text-blue-400 border-blue-500/30',
+  Private: 'bg-gray-500/15 text-gray-400 border-gray-500/30',
+  'In Progress': 'bg-yellow-500/15 text-yellow-400 border-yellow-500/30',
+};
+
+// GitHub SVG icon
+const GitHubIcon = () => (
+  <svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+    <path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" />
+  </svg>
 );
 
 export default function HomePage() {
   const featured = getFeaturedProjects().slice(0, 3);
+  const topCerts = certifications.slice(0, 3);
 
   return (
-    <div className="min-h-screen bg-[#11071F] pt-16">
-      {/* ─── HERO ─────────────────────────────────────────────── */}
-      <section className="relative min-h-[92vh] flex items-center overflow-hidden hero-grid">
-        {/* Ambient glows */}
-        <div className="pointer-events-none absolute -top-40 -left-40 w-[700px] h-[700px] rounded-full bg-purple-700/10 blur-[120px]" />
-        <div className="pointer-events-none absolute top-1/3 right-0 w-[500px] h-[500px] rounded-full bg-blue-700/8 blur-[100px]" />
+    <div className="min-h-screen bg-background pt-16">
 
-        <div className="relative z-10 max-w-7xl mx-auto px-6 py-24 w-full">
-          <div className="flex flex-col lg:flex-row items-center gap-16">
-            {/* Left – Text */}
+      {/* ═══════════════════════════════════════════════════════════════════
+          HERO
+      ═══════════════════════════════════════════════════════════════════ */}
+      <section className="relative min-h-[95vh] flex items-center overflow-x-clip grid-bg z-20" aria-label="Introduction">
+        {/* Ambient glows */}
+        <div className="pointer-events-none absolute -top-40 -left-40 w-[700px] h-[700px] rounded-full bg-purple-700/10 blur-[130px]" />
+        <div className="pointer-events-none absolute top-1/2 right-0 w-[500px] h-[500px] rounded-full bg-blue-700/6 blur-[110px]" />
+        <div className="pointer-events-none absolute bottom-0 left-1/3 w-[400px] h-[400px] rounded-full bg-purple-800/6 blur-[100px]" />
+
+        <div className="relative z-20 max-w-7xl mx-auto px-4 sm:px-6 py-24 w-full">
+          <div className="flex flex-col lg:flex-row items-center gap-16 lg:gap-20">
+
+            {/* ── Left: Text ─────────────────────────────────────── */}
             <div className="flex-1 text-center lg:text-left">
-              {/* Badge */}
+
+              {/* Eyebrow */}
               <motion.div
                 initial={{ opacity: 0, y: 12 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5 }}
-                className="inline-flex items-center gap-2 px-4 py-2 bg-purple-600/15 border border-purple-600/30 rounded-full text-purple-300 text-sm font-medium mb-8"
+                className="flex items-center gap-3 justify-center lg:justify-start mb-8"
               >
-                <span className="w-2 h-2 bg-green-400 rounded-full animate-pulse" />
-                Available for new opportunities
+                {/* Mini avatar */}
+                <div className="w-8 h-8 rounded-full border border-purple-500/40 overflow-hidden flex-shrink-0">
+                  <Image src="/Me.svg" width={32} height={32} alt="" aria-hidden="true" className="w-full h-full object-cover" />
+                </div>
+                <span className="font-mono text-xs font-semibold tracking-[0.2em] uppercase text-purple-300/90">
+                  AI Engineer · Full Stack Developer
+                </span>
               </motion.div>
 
+              {/* Headline */}
               <motion.h1
-                initial={{ opacity: 0, y: 20 }}
+                initial={{ opacity: 0, y: 24 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: 0.1 }}
-                className="text-5xl md:text-6xl lg:text-7xl font-bold text-white mb-4 leading-tight"
+                transition={{ duration: 0.65, delay: 0.1 }}
+                className="font-bold text-white leading-[1.1] mb-6"
+                style={{ fontSize: 'clamp(3rem, 6.5vw, 6.5rem)' }}
               >
-                Hi, I'm{' '}
-                <span className="text-gradient">Abderrahemane</span>
+                Building{' '}
+                <span className="text-gradient">AI-powered</span>
+                {' '}systems that solve real problems.
               </motion.h1>
 
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: 0.2 }}
-                className="text-xl md:text-2xl text-purple-300 font-medium mb-6"
-              >
-                AI Engineer &amp; Full Stack Developer
-              </motion.div>
-
+              {/* Supporting text */}
               <motion.p
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: 0.3 }}
+                transition={{ duration: 0.6, delay: 0.25 }}
                 className="text-gray-400 text-lg max-w-xl mx-auto lg:mx-0 leading-relaxed mb-10"
               >
-                I build intelligent systems and scalable web applications — combining
-                machine learning expertise with modern full-stack engineering to
-                create meaningful digital experiences.
+                I design and build intelligent products across LLMs, RAG, multimodal AI,
+                machine learning, and modern full-stack systems.
               </motion.p>
 
+              {/* CTAs */}
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: 0.4 }}
-                className="flex flex-wrap gap-4 justify-center lg:justify-start"
+                transition={{ duration: 0.6, delay: 0.38 }}
+                className="relative z-30 flex flex-wrap gap-4 justify-center lg:justify-start"
               >
                 <Link
                   href="/projects"
                   className="btn-primary inline-flex items-center gap-2 px-6 py-3 text-base"
                 >
-                  View Projects
-                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  View My Work
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
                   </svg>
                 </Link>
+
+                <CVDropdown />
+
                 <Link
-                  href="/contact"
-                  className="inline-flex items-center gap-2 px-6 py-3 border border-purple-600/50 text-purple-300 hover:bg-purple-600/10 hover:border-purple-500 rounded-lg font-medium transition-all duration-200 text-base"
+                  href="https://github.com/sahki-abderrahemane"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 px-6 py-3 bg-white/5 hover:bg-white/10 border border-white/10 hover:border-white/20 text-gray-300 hover:text-white rounded-lg font-medium transition-all duration-200 text-base"
                 >
-                  Contact Me
+                  <GitHubIcon />
+                  GitHub
                 </Link>
-                <a
-                  href="/Abderrahmane_Sahki_Resume_ATS.pdf"
-                  download
-                  className="inline-flex items-center gap-2 px-6 py-3 bg-white/5 hover:bg-white/10 border border-white/10 hover:border-white/20 text-white rounded-lg font-medium transition-all duration-200 text-base"
-                >
-                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                  </svg>
-                  Download CV
-                </a>
               </motion.div>
             </div>
 
-            {/* Right – Avatar */}
+            {/* ── Right: Abstract AI Visual ───────────────────────── */}
             <motion.div
-              initial={{ opacity: 0, scale: 0.85 }}
+              initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.7, delay: 0.2 }}
-              className="relative flex-shrink-0"
+              className="relative flex-shrink-0 w-72 h-72 md:w-96 md:h-96"
+              aria-hidden="true"
             >
-              <div className="relative w-56 h-56 md:w-72 md:h-72">
-                <div className="absolute inset-0 rounded-full bg-gradient-to-br from-purple-600/40 to-blue-600/20 blur-2xl" />
-                <div className="relative w-full h-full rounded-full border-2 border-purple-500/30 overflow-hidden bg-gradient-to-br from-[#2B0B3A] to-[#1a0624] p-1">
-                  <Image
-                    src="/Me.svg"
-                    width={288}
-                    height={288}
-                    alt="Abderrahemane Sahki"
-                    className="w-full h-full object-cover rounded-full float-animation"
-                  />
-                </div>
-                {/* Floating badges */}
-                <div className="absolute -bottom-2 -right-4 bg-[#1A0B2E] border border-purple-600/30 rounded-xl px-3 py-2 shadow-xl">
-                  <span className="text-xs text-purple-300 font-medium">🤖 AI Engineer</span>
-                </div>
-                <div className="absolute -top-2 -left-4 bg-[#1A0B2E] border border-blue-600/30 rounded-xl px-3 py-2 shadow-xl">
-                  <span className="text-xs text-blue-300 font-medium">💻 Full Stack</span>
-                </div>
-              </div>
+              {/* Glow */}
+              <div className="absolute inset-0 rounded-full bg-gradient-to-br from-purple-600/20 to-blue-600/10 blur-3xl" />
+
+              {/* SVG node graph */}
+              <svg viewBox="0 0 400 400" className="w-full h-full" fill="none">
+                {/* Outer ring connections */}
+                <line x1="200" y1="200" x2="110" y2="100" stroke="rgba(152,87,211,0.25)" strokeWidth="1.5" />
+                <line x1="200" y1="200" x2="310" y2="100" stroke="rgba(110,191,244,0.25)" strokeWidth="1.5" />
+                <line x1="200" y1="200" x2="340" y2="230" stroke="rgba(152,87,211,0.2)" strokeWidth="1.5" />
+                <line x1="200" y1="200" x2="290" y2="320" stroke="rgba(110,191,244,0.2)" strokeWidth="1.5" />
+                <line x1="200" y1="200" x2="110" y2="320" stroke="rgba(152,87,211,0.2)" strokeWidth="1.5" />
+                <line x1="200" y1="200" x2="60" y2="230" stroke="rgba(110,191,244,0.2)" strokeWidth="1.5" />
+
+                {/* Cross connections between outer nodes */}
+                <line x1="110" y1="100" x2="310" y2="100" stroke="rgba(152,87,211,0.12)" strokeWidth="1" />
+                <line x1="310" y1="100" x2="340" y2="230" stroke="rgba(110,191,244,0.12)" strokeWidth="1" />
+                <line x1="340" y1="230" x2="290" y2="320" stroke="rgba(152,87,211,0.12)" strokeWidth="1" />
+                <line x1="290" y1="320" x2="110" y2="320" stroke="rgba(110,191,244,0.12)" strokeWidth="1" />
+                <line x1="110" y1="320" x2="60" y2="230" stroke="rgba(152,87,211,0.12)" strokeWidth="1" />
+                <line x1="60" y1="230" x2="110" y2="100" stroke="rgba(110,191,244,0.12)" strokeWidth="1" />
+
+                {/* Outer nodes */}
+                {[
+                  { cx: 110, cy: 100, r: 8, fill: '#9857d3', label: 'LLM' },
+                  { cx: 310, cy: 100, r: 8, fill: '#6EBFF4', label: 'RAG' },
+                  { cx: 340, cy: 230, r: 6, fill: '#9857d3', label: 'CLIP' },
+                  { cx: 290, cy: 320, r: 8, fill: '#6EBFF4', label: 'API' },
+                  { cx: 110, cy: 320, r: 6, fill: '#9857d3', label: 'DB' },
+                  { cx: 60, cy: 230, r: 7, fill: '#6EBFF4', label: 'UI' },
+                ].map((n) => (
+                  <g key={n.label}>
+                    <circle cx={n.cx} cy={n.cy} r={n.r + 4} fill={n.fill} opacity="0.15" />
+                    <circle cx={n.cx} cy={n.cy} r={n.r} fill={n.fill} opacity="0.9" />
+                    <text x={n.cx} y={n.cy - n.r - 6} textAnchor="middle" fontSize="10" fill="rgba(255,255,255,0.6)" fontFamily="monospace">
+                      {n.label}
+                    </text>
+                  </g>
+                ))}
+
+                {/* Centre node — pulsing */}
+                <circle cx="200" cy="200" r="36" fill="rgba(152,87,211,0.08)" />
+                <circle cx="200" cy="200" r="26" fill="rgba(152,87,211,0.15)" />
+                <circle cx="200" cy="200" r="18" fill="#9857d3" opacity="0.9" className="pulse-glow" />
+                <text x="200" y="196" textAnchor="middle" fontSize="9" fill="white" fontFamily="monospace" fontWeight="bold">AI</text>
+                <text x="200" y="208" textAnchor="middle" fontSize="8" fill="rgba(255,255,255,0.7)" fontFamily="monospace">Core</text>
+              </svg>
             </motion.div>
           </div>
         </div>
@@ -162,18 +203,21 @@ export default function HomePage() {
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ delay: 1.2 }}
-          className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 text-gray-500 text-xs"
+          transition={{ delay: 1.4 }}
+          className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 text-gray-600 text-xs"
+          aria-hidden="true"
         >
-          <span>Scroll down</span>
-          <div className="w-0.5 h-8 bg-gradient-to-b from-purple-500 to-transparent animate-bounce" />
+          <span className="tracking-wider">SCROLL</span>
+          <div className="w-px h-8 bg-gradient-to-b from-purple-500/50 to-transparent" />
         </motion.div>
       </section>
 
-      {/* ─── STATS ─────────────────────────────────────────────── */}
-      <section className="py-16 border-y border-purple-900/20 bg-[#13082A]/40">
-        <div className="max-w-5xl mx-auto px-6">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+      {/* ═══════════════════════════════════════════════════════════════════
+          STATS BAR
+      ═══════════════════════════════════════════════════════════════════ */}
+      <section className="border-y border-purple-900/20 bg-surface/40" aria-label="Statistics">
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 py-10">
+          <div className="grid grid-cols-2 md:grid-cols-4 divide-x divide-purple-900/20">
             {stats.map((s, i) => (
               <motion.div
                 key={s.label}
@@ -182,19 +226,21 @@ export default function HomePage() {
                 whileInView="show"
                 viewport={{ once: true }}
                 custom={i}
-                className="stat-card"
+                className="text-center px-4 py-2"
               >
-                <div className="w-10 h-10 mb-3 mx-auto rounded-xl bg-gradient-to-br from-purple-600/20 to-blue-600/10 border border-purple-500/20 flex items-center justify-center text-purple-300">{s.icon}</div>
-                <div className="text-3xl font-bold text-white mb-1">{s.value}</div>
-                <div className="text-gray-400 text-sm">{s.label}</div>
+                <div className="text-3xl md:text-4xl font-bold text-white mb-1">{s.value}</div>
+                <div className="text-sm font-medium text-purple-300 mb-0.5">{s.label}</div>
+                <div className="text-xs text-gray-600">{s.suffix}</div>
               </motion.div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* ─── FEATURED PROJECTS ─────────────────────────────────── */}
-      <section className="py-24 max-w-7xl mx-auto px-6">
+      {/* ═══════════════════════════════════════════════════════════════════
+          FEATURED PROJECTS
+      ═══════════════════════════════════════════════════════════════════ */}
+      <section className="py-24 max-w-7xl mx-auto px-4 sm:px-6" aria-label="Featured projects">
         <motion.div
           variants={fadeUp}
           initial="hidden"
@@ -207,82 +253,156 @@ export default function HomePage() {
             Selected <span className="text-gradient">Projects</span>
           </h2>
           <p className="text-gray-400 text-lg max-w-2xl mx-auto">
-            A selection of projects that showcase my skills across AI, full-stack, and system design.
+            A selection of projects showcasing AI engineering, full-stack production, and graph ML.
           </p>
         </motion.div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
           {featured.map((project, i) => (
-            <motion.div
+            <motion.article
               key={project.slug}
               variants={fadeUp}
               initial="hidden"
               whileInView="show"
               viewport={{ once: true }}
               custom={i}
-              className="group relative bg-gradient-to-br from-[#1A0B2E] to-[#13082A] rounded-2xl border border-purple-800/20 hover:border-purple-600/40 overflow-hidden transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl hover:shadow-purple-900/30"
+              className="group relative bg-gradient-to-br from-surface to-background-alt rounded-2xl border border-purple-800/20 hover:border-purple-600/40 overflow-hidden transition-transform duration-300 hover:-translate-y-1 hover:shadow-2xl hover:shadow-purple-900/30 flex flex-col"
             >
+              {/* Project number */}
+              <div className="absolute top-4 left-4 z-10 font-mono text-xs font-bold text-purple-500/70">
+                {String(i + 1).padStart(2, '0')}
+              </div>
+
               {/* Image */}
-              <div className="relative h-44 bg-gradient-to-br from-[#2B0B3A] to-[#1a0624] overflow-hidden">
+              <div className="relative h-44 bg-gradient-to-br from-[#2B0B3A] to-[#1a0624] overflow-hidden flex-shrink-0">
                 <Image
                   src={project.image}
                   alt={project.title}
                   fill
-                  className="object-cover opacity-80 group-hover:opacity-100 group-hover:scale-105 transition-all duration-500"
+                  className="object-cover opacity-75 group-hover:opacity-100 group-hover:scale-105 transition-all duration-500"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-[#1A0B2E] via-transparent to-transparent" />
-                <div className="absolute top-3 right-3 px-2 py-1 bg-black/40 backdrop-blur-sm rounded-full text-xs text-gray-300 border border-white/10">
-                  {project.status}
+                <div className="absolute inset-0 bg-gradient-to-t from-surface via-transparent to-transparent" />
+                <div className="absolute top-3 right-3">
+                  <span className={`text-[10px] px-2 py-0.5 rounded-full border font-medium backdrop-blur-sm ${statusColor[project.status]}`}>
+                    {project.status}
+                  </span>
                 </div>
               </div>
 
               {/* Content */}
-              <div className="p-6">
-                <p className="text-purple-400 text-xs font-medium uppercase tracking-wider mb-1">{project.theme}</p>
+              <div className="p-6 flex flex-col flex-1">
+                <p className="text-purple-400 text-[10px] font-semibold uppercase tracking-[0.15em] mb-2">
+                  {project.category}
+                </p>
                 <h3 className="text-white font-bold text-xl mb-2 group-hover:text-purple-200 transition-colors duration-200">
                   {project.title}
                 </h3>
-                <p className="text-gray-400 text-sm leading-relaxed mb-4 line-clamp-2">{project.description}</p>
+                <p className="text-gray-400 text-sm leading-relaxed mb-4 flex-1 line-clamp-2">
+                  {project.problem || project.description}
+                </p>
 
-                <div className="flex flex-wrap gap-1.5 mb-5">
-                  {project.technologies.slice(0, 3).map((t) => (
-                    <span key={t} className="tag-pill text-[10px]">{t}</span>
-                  ))}
-                  {project.technologies.length > 3 && (
-                    <span className="tag-pill text-[10px]">+{project.technologies.length - 3}</span>
-                  )}
-                </div>
+                {/* Tech tags — single line summary */}
+                <p className="text-[11px] text-gray-600 mb-4 font-mono">
+                  {project.technologies.slice(0, 4).join(' · ')}
+                  {project.technologies.length > 4 && ` · +${project.technologies.length - 4}`}
+                </p>
 
                 <Link
                   href={`/projects/${project.slug}`}
-                  className="inline-flex items-center gap-2 text-purple-400 hover:text-purple-300 text-sm font-medium transition-colors duration-200"
+                  className="inline-flex items-center gap-1.5 text-purple-400 hover:text-purple-300 text-sm font-medium transition-colors duration-200"
                 >
-                  View Details
-                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  View Case Study
+                  <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
                   </svg>
                 </Link>
               </div>
-            </motion.div>
+            </motion.article>
           ))}
         </div>
 
         <div className="text-center">
           <Link
             href="/projects"
-            className="inline-flex items-center gap-2 px-6 py-3 border border-purple-600/40 text-purple-300 hover:bg-purple-600/10 rounded-xl transition-all duration-200 font-medium"
+            className="inline-flex items-center gap-2 px-6 py-3 border border-purple-600/40 text-purple-300 hover:bg-purple-600/10 rounded-xl transition-all duration-200 font-medium hover:-translate-y-0.5"
           >
             See All Projects
-            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
             </svg>
           </Link>
         </div>
       </section>
 
-      {/* ─── TECH STACK ─────────────────────────────────────────── */}
-      <section className="py-20 border-t border-purple-900/15">
-        <div className="max-w-5xl mx-auto px-6">
+      {/* ═══════════════════════════════════════════════════════════════════
+          AI ENGINEERING STRIP
+      ═══════════════════════════════════════════════════════════════════ */}
+      <section className="py-12 border-t border-purple-900/15" aria-label="AI engineering focus areas">
+        <div className="max-w-5xl mx-auto px-4 sm:px-6">
+          <motion.div
+            variants={fadeUp}
+            initial="hidden"
+            whileInView="show"
+            viewport={{ once: true }}
+            className="flex flex-col sm:flex-row items-center gap-6 sm:gap-10"
+          >
+            <div className="flex-shrink-0 text-center sm:text-left">
+              <p className="text-[10px] font-mono uppercase tracking-[0.2em] text-purple-400 mb-1">AI Focus</p>
+              <Link href="/ai" className="text-white font-bold text-lg hover:text-purple-300 transition-colors duration-200 flex items-center gap-1.5">
+                AI / ML
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                </svg>
+              </Link>
+            </div>
+            <div className="flex-1 flex flex-wrap gap-2 justify-center sm:justify-start">
+              {aiStrip.map((tag) => (
+                <span key={tag} className="px-3 py-1.5 text-sm font-medium bg-purple-600/10 text-purple-300 border border-purple-600/20 rounded-full">
+                  {tag}
+                </span>
+              ))}
+            </div>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* ═══════════════════════════════════════════════════════════════════
+          ENGINEERING STRIP
+      ═══════════════════════════════════════════════════════════════════ */}
+      <section className="py-12 border-t border-purple-900/15" aria-label="Engineering stack">
+        <div className="max-w-5xl mx-auto px-4 sm:px-6">
+          <motion.div
+            variants={fadeUp}
+            initial="hidden"
+            whileInView="show"
+            viewport={{ once: true }}
+            className="flex flex-col sm:flex-row items-center gap-6 sm:gap-10"
+          >
+            <div className="flex-shrink-0 text-center sm:text-left">
+              <p className="text-[10px] font-mono uppercase tracking-[0.2em] text-blue-400 mb-1">Full Stack</p>
+              <Link href="/engineering" className="text-white font-bold text-lg hover:text-blue-300 transition-colors duration-200 flex items-center gap-1.5">
+                Engineering
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                </svg>
+              </Link>
+            </div>
+            <div className="flex-1 flex flex-wrap gap-2 justify-center sm:justify-start">
+              {engStrip.map((tag) => (
+                <span key={tag} className="px-3 py-1.5 text-sm font-medium bg-blue-600/10 text-blue-300 border border-blue-600/20 rounded-full">
+                  {tag}
+                </span>
+              ))}
+            </div>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* ═══════════════════════════════════════════════════════════════════
+          TRAJECTORY
+      ═══════════════════════════════════════════════════════════════════ */}
+      <section className="py-20 border-t border-purple-900/15" aria-label="Career trajectory">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6">
           <motion.div
             variants={fadeUp}
             initial="hidden"
@@ -290,35 +410,90 @@ export default function HomePage() {
             viewport={{ once: true }}
             className="text-center mb-12"
           >
-            <h2 className="text-3xl font-bold text-white mb-4">
-              Tech <span className="text-gradient">Stack</span>
-            </h2>
-            <p className="text-gray-400">The tools and technologies I work with daily</p>
+            <span className="tag-pill mb-4 inline-block">Journey</span>
+            <h2 className="text-3xl md:text-4xl font-bold text-white">My Trajectory</h2>
           </motion.div>
 
-          <div className="flex flex-wrap justify-center gap-6">
-            {featuredSkills.map((skill, i) => (
+          <div className="relative flex flex-col gap-0" role="list">
+            {/* Vertical line */}
+            <div className="absolute left-[1.65rem] top-4 bottom-4 w-px bg-gradient-to-b from-purple-600/60 via-purple-500/30 to-transparent" aria-hidden="true" />
+
+            {trajectory.map((t, i) => (
               <motion.div
-                key={skill.name}
+                key={i}
                 variants={fadeUp}
                 initial="hidden"
                 whileInView="show"
                 viewport={{ once: true }}
                 custom={i}
-                whileHover={{ y: -4, scale: 1.05 }}
-                className="flex flex-col items-center gap-3 p-4 w-24 bg-[#1A0B2E]/60 border border-purple-800/20 hover:border-purple-600/40 rounded-xl transition-all duration-200 cursor-default"
+                role="listitem"
+                className="relative flex items-center gap-6 py-4"
               >
-                <Image src={skill.icon} width={36} height={36} alt={skill.name} className="object-contain" />
-                <span className="text-gray-400 text-xs text-center">{skill.name}</span>
+                {/* Dot */}
+                <div className={`relative flex-shrink-0 w-[3.3rem] h-[3.3rem] rounded-full bg-gradient-to-br ${t.color} flex items-center justify-center shadow-lg`} aria-hidden="true">
+                  <span className="text-[10px] font-mono font-bold text-white/90">{t.year}</span>
+                </div>
+                <div>
+                  <p className="text-white font-semibold">{t.label}</p>
+                </div>
               </motion.div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* ─── CTA STRIP ──────────────────────────────────────────── */}
-      <section className="py-24">
-        <div className="max-w-4xl mx-auto px-6">
+      {/* ═══════════════════════════════════════════════════════════════════
+          CERTIFICATIONS STRIP
+      ═══════════════════════════════════════════════════════════════════ */}
+      <section className="py-16 border-t border-purple-900/15" aria-label="Certifications">
+        <div className="max-w-5xl mx-auto px-4 sm:px-6">
+          <motion.div
+            variants={fadeUp}
+            initial="hidden"
+            whileInView="show"
+            viewport={{ once: true }}
+            className="text-center mb-10"
+          >
+            <span className="tag-pill mb-4 inline-block">Credentials</span>
+            <h2 className="text-3xl font-bold text-white">
+              06 ML <span className="text-gradient">Certifications</span>
+            </h2>
+          </motion.div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            {topCerts.map((cert, i) => (
+              <motion.div
+                key={cert.id}
+                variants={fadeUp}
+                initial="hidden"
+                whileInView="show"
+                viewport={{ once: true }}
+                custom={i}
+                className="p-5 bg-surface/60 border border-purple-800/20 rounded-xl hover:border-purple-600/40 transition-colors duration-200"
+              >
+                <p className="text-purple-400 text-xs font-medium mb-1">{cert.issuer}</p>
+                <p className="text-white font-semibold text-sm leading-snug">{cert.title}</p>
+                <p className="text-gray-600 text-xs mt-1">{cert.date}</p>
+              </motion.div>
+            ))}
+          </div>
+
+          <div className="text-center mt-8">
+            <Link href="/certifications" className="text-purple-400 hover:text-purple-300 text-sm font-medium transition-colors duration-200 inline-flex items-center gap-1.5">
+              View all 6 certifications
+              <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+              </svg>
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* ═══════════════════════════════════════════════════════════════════
+          CTA
+      ═══════════════════════════════════════════════════════════════════ */}
+      <section className="py-24" aria-label="Call to action">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6">
           <motion.div
             variants={fadeUp}
             initial="hidden"
@@ -326,28 +501,22 @@ export default function HomePage() {
             viewport={{ once: true }}
             className="relative overflow-hidden rounded-3xl p-12 text-center"
             style={{
-              background: 'linear-gradient(135deg, rgba(113,39,186,0.2), rgba(59,130,246,0.1))',
+              background: 'linear-gradient(135deg, rgba(113,39,186,0.2), rgba(59,130,246,0.08))',
               border: '1px solid rgba(152,87,211,0.25)',
             }}
           >
-            <div className="pointer-events-none absolute inset-0 rounded-3xl bg-gradient-to-br from-purple-600/5 to-blue-600/5" />
+            <div className="pointer-events-none absolute inset-0 rounded-3xl bg-gradient-to-br from-purple-600/5 to-blue-600/5" aria-hidden="true" />
             <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
-              Let's Build Something <span className="text-gradient">Together</span>
+              Let's build something <span className="text-gradient">intelligent.</span>
             </h2>
             <p className="text-gray-400 text-lg mb-8 max-w-xl mx-auto">
-              Whether it's an AI-powered product, a full-stack application, or an ML pipeline — I'm ready to collaborate.
+              Open to AI engineering roles, full-stack projects, and research collaborations.
             </p>
             <div className="flex flex-wrap gap-4 justify-center">
-              <Link
-                href="/contact"
-                className="btn-primary inline-flex items-center gap-2 px-8 py-3 text-base"
-              >
+              <Link href="/contact" className="btn-primary inline-flex items-center gap-2 px-8 py-3 text-base">
                 Get In Touch
               </Link>
-              <Link
-                href="/about"
-                className="inline-flex items-center gap-2 px-8 py-3 border border-purple-600/40 text-purple-300 hover:bg-purple-600/10 rounded-lg font-medium transition-all duration-200 text-base"
-              >
+              <Link href="/about" className="inline-flex items-center gap-2 px-8 py-3 border border-purple-600/40 text-purple-300 hover:bg-purple-600/10 rounded-lg font-medium transition-all duration-200 text-base">
                 Learn About Me
               </Link>
             </div>

@@ -60,6 +60,14 @@ export const timeline: TimelineEntry[] = [
         type: 'project',
     },
     {
+        year: '2024',
+        title: 'Freelance Data Analyst — Research Statistical Pipeline',
+        description:
+            'Conducted full statistical analysis pipeline for a PhD researcher in plant biology, producing publication-ready outputs including Two-Way ANOVA, PCA, and correlation matrices for drought tolerance rankings.',
+        tags: ['Data Analysis', 'Two-Way ANOVA', 'PCA', 'Statsmodels', 'Scikit-learn', 'Statistics'],
+        type: 'work',
+    },
+    {
         year: '2024-',
         title: 'Full Stack Developer at Primaria Tech',
         description:

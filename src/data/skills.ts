@@ -16,7 +16,7 @@ export const skills: Skill[] = [
     { name: 'NestJS', icon: '/nestjs.svg', category: 'Backend' },
     { name: 'FastAPI', icon: '/python.svg', category: 'Backend' },
     { name: 'GraphQL', icon: '/graphql.svg', category: 'Backend' },
-    { name: "Socket.io", icon: '/socket.svg', category: 'Backend' },
+    { name: 'Socket.io', icon: '/socket.svg', category: 'Backend' },
     // Database
     { name: 'MongoDB', icon: '/mongo.svg', category: 'Database' },
     { name: 'MySQL', icon: '/mysql.svg', category: 'Database' },
@@ -27,14 +27,21 @@ export const skills: Skill[] = [
     { name: 'PyTorch', icon: '/pytorch.svg', category: 'AI/ML' },
     { name: 'TensorFlow', icon: '/tensorflow.svg', category: 'AI/ML' },
     { name: 'Scikit-learn', icon: '/scikit-learn.svg', category: 'AI/ML' },
+    { name: 'FAISS', icon: '/faiss.svg', category: 'AI/ML' },
+    { name: 'LangChain', icon: '/langchain.svg', category: 'AI/ML' },
+    { name: 'HuggingFace', icon: '/huggingface.svg', category: 'AI/ML' },
+    { name: 'PEFT', icon: '/python.svg', category: 'AI/ML' },
     // ML Libraries
     { name: 'Pandas', icon: '/pandas.svg', category: 'ML Libraries' },
     { name: 'NumPy', icon: '/numpy.svg', category: 'ML Libraries' },
     { name: 'Matplotlib', icon: '/matplotlib.svg', category: 'ML Libraries' },
     { name: 'Seaborn', icon: '/seaborn.svg', category: 'ML Libraries' },
     { name: 'OpenCV', icon: '/opencv.svg', category: 'ML Libraries' },
+    { name: 'MLflow', icon: '/mlflow.svg', category: 'ML Libraries' },
     // DevOps
-    { name: 'Socket.io', icon: '/socket.svg', category: 'DevOps' },
+    { name: 'Docker', icon: '/docker.svg', category: 'DevOps' },
+    { name: 'Kafka', icon: '/kafka.svg', category: 'DevOps' },
+    { name: 'Airflow', icon: '/airflow.svg', category: 'DevOps' },
 ];
 
 export const skillCategories = [
